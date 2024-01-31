@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Tag as Avatar, Badge, Space, Button, Input } from "antd";
-import { PoweroffOutlined } from "@ant-design/icons";
+import { Button as Avatar, Badge, Space, Button, Input, Popconfirm } from "antd";
+import { SendOutlined } from "@ant-design/icons";
 import "./search.css";
 
 function BarraDeBusqueda() {
@@ -37,17 +37,32 @@ function BarraDeBusqueda() {
 
   const manejarEnvioLista = () => {
     setLoading(true);
-    // Aquí puedes manejar el envío de la lista
     setLoading(false);
+  };
+
+  const manejarEliminacion = (item) => {
+    setItems((prevItems) => {
+        const newItems = { ...prevItems };
+        newItems[item] -= 1;
+        if (newItems[item] < 1) {
+          delete newItems[item];
+        }
+        return newItems;
+      });
   };
 
   return (
     <div className="container">
       <form className="search-bar">
-        <Input 
+        <Input
           type="text"
           value={entrada}
           onChange={manejarCambio}
+          onKeyDown={(evento) => {
+            if (evento.key === "Enter") {
+              manejarEnvio(evento);
+            }
+          }}
           placeholder="Agrega items separados por comas"
         />
         <Button type="primary" onClick={manejarEnvio}>
@@ -58,7 +73,7 @@ function BarraDeBusqueda() {
         </Button>
         <Button
           type="primary"
-          icon={<PoweroffOutlined />}
+          icon={<SendOutlined />}
           loading={loading}
           onClick={manejarEnvioLista}
         >
@@ -67,19 +82,39 @@ function BarraDeBusqueda() {
       </form>
       <ul className="product-list">
         <Space size="large">
-          {Object.entries(items).map(([item, count]) => (
-            <Badge
-              id="badge-count"
-              key={item}
-              count={count}
-              showZero
-              overflowCount={999}
-            >
-              <Avatar id="tag-item" shape="square" size="large">
+          {Object.entries(items).map(([item, count]) =>
+            count > 1 ? (
+              <Badge id="badge-count" key={item} count={count} showZero={false}>
+                <Avatar
+                  id="tag-item"
+                  shape="square"
+                  size="small"
+                  onClick={() => manejarEliminacion(item)}
+                >
+                  {item}
+                </Avatar>
+              </Badge>
+            ) : (
+                <Popconfirm
+                title="¿Estás seguro de que quieres eliminar este item?"
+                onConfirm={() => manejarEliminacion(item)}
+                okText="Sí"
+                onKeyDown={(evento) => {
+                    if (evento.key === "Enter") {
+                        manejarEliminacion(item);
+                      }}}
+                cancelText="No"
+              >
+              <Avatar
+                id="tag-item"
+                shape="square"
+                size="small"
+              >
                 {item}
               </Avatar>
-            </Badge>
-          ))}
+            </Popconfirm>
+            )
+          )}
         </Space>
       </ul>
     </div>

@@ -2,7 +2,8 @@
   --primary-color: #1890ff;
   --secondary-color: #f0f0f0;
   --danger-color: #ff4d4f;
-  --font-item-color: #000000;
+  --tag-item-color: #FAAD14;
+  --font-item-color: #ffffff;
   --font-family: Arial, sans-serif; /* Cambia esto a la fuente que prefieras */
   --font-weight: bold; /* Puede ser 'normal', 'bold', 'bolder', 'lighter', 'number', 'initial' o 'inherit' */
   --font-style: italic; /* Puede ser 'normal', 'italic', 'oblique', 'initial' o 'inherit' */
@@ -46,4 +47,6 @@ body {
   margin-bottom: 5px;
   color: var(--font-item-color);
   font-weight: var(--font-weight);
+  cursor: pointer;
+  background-color: var(--tag-item-color);
 }
